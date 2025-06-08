@@ -55,11 +55,16 @@ def index():
             confidence = max(pred_proba) * 100
             prediction = f"{mapped_label} - Độ tin cậy: {confidence:.0f}%"
 
-            return render_template('index.html', prediction=prediction, error=None)
+            # Convert pred_proba to list for JSON serialization
+            pred_proba_list = pred_proba.tolist()
+
+            return render_template('index.html', prediction=prediction, error=None, severity_level=mapped_label, user_data=user_data, pred_proba=pred_proba_list)
+
+            return render_template('index.html', prediction=prediction, error=None, severity_level=mapped_label, user_data=user_data)
         except Exception as e:
             return render_template('index.html', error=str(e), prediction=None)
 
-    return render_template('index.html', prediction=None, error=None)
+    return render_template('index.html', prediction=None, error=None, user_data={}, pred_proba=[])
 
 if __name__ == '__main__':
     app.run(debug=True)

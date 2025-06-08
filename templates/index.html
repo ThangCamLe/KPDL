@@ -5,121 +5,211 @@
     <title>Dự đoán bệnh tim</title>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/833/833472.png" type="image/png" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #e9f5f9;
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            margin: 0;
+            min-height: 100vh;
+            width: 100vw;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #224c87, #f6f9fb);
             color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        h1 {
-            color: #007bff;
-            text-align: center;
-            margin-bottom: 30px;
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            max-width: 95vw;
+            background: linear-gradient(145deg, #ffffff, #f0f4f8);
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            padding: 30px;
+            backdrop-filter: blur(6px);
         }
-        form {
-            background: #ffffff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            max-width: 400px;
-            margin: 0 auto;
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        .form-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        .form-wrapper {
+            background: linear-gradient(135deg, #d0f0ff, #e0f7fa);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 123, 167, 0.2);
+            transition: background 0.5s ease;
+        }
+        .form-wrapper form {
+            display: flex;
+            flex-direction: column;
         }
         label {
-            display: block;
             margin-top: 15px;
-            font-weight: 600;
-            color: #0056b3;
+            font-weight: 700;
+            color: #006d77;
         }
-        input[type="number"], select {
-            width: 100%;
-            padding: 8px;
+        input, select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #5ec2d3;
             margin-top: 5px;
-            border-radius: 4px;
-            border: 1px solid #007bff;
-            font-size: 14px;
-            color: #333;
+            background: #f0fbfc;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: #00b4d8;
+            outline: none;
         }
         button {
-            margin-top: 25px;
-            padding: 10px 15px;
-            background-color: #007bff;
+            margin-top: 20px;
+            padding: 12px;
+            background: linear-gradient(to right, #00b4d8, #0077b6);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            width: 100%;
+            font-weight: bold;
+            transition: background 0.3s ease;
         }
         button:hover {
-            background-color: #0056b3;
+            background: linear-gradient(to right, #0096c7, #005f73);
+        }
+        .result-wrapper {
+            flex: 1.2;
+            background: linear-gradient(135deg, #e3f2fd, #f0f8ff);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 119, 182, 0.2);
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .result-wrapper.visible {
+            opacity: 1;
+            pointer-events: auto;
         }
         .result {
-            margin-top: 20px;
+            background: linear-gradient(90deg, #b3e5fc, #81d4fa);
             padding: 15px;
-            background-color: #d1e7dd;
-            border: 1px solid #badbcc;
-            border-radius: 4px;
-            color: #0f5132;
-            font-weight: 600;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
+            border-radius: 12px;
             text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #01579b;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        .error {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8d7da;
-            border: 1px solid #f5c2c7;
-            border-radius: 4px;
-            color: #842029;
-            font-weight: 600;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        thead {
+            background: #00b4d8;
+            color: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #b3e5fc;
+            text-align: left;
+        }
+        tr.highlight {
+            background-color: #90e0ef;
+            font-weight: bold;
+        }
+        canvas {
+            max-width: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Dự đoán bệnh tim</h1>
-    <form method="post">
-        <label for="Age">Tuổi:</label>
-        <input type="number" id="Age" name="Age" step="1" min="0" required />
+    <div class="container">
+        <div class="form-column">
+            <h1 style="color:#0077b6">Dự đoán bệnh tim</h1>
+            <div class="form-wrapper">
+                <form method="post">
+                    <label for="Age">Tuổi:</label>
+                    <input type="number" id="Age" name="Age" min="0" required value="{{ user_data.get('Age', '') }}">
 
-        <label for="Gender">Giới tính:</label>
-        <select id="Gender" name="Gender" required>
-            <option value="">Chọn giới tính</option>
-            <option value="1">Nam</option>
-            <option value="0">Nữ</option>
-        </select>
+                    <label for="Gender">Giới tính:</label>
+                    <select id="Gender" name="Gender" required>
+                        <option value="">Chọn giới tính</option>
+                        <option value="1" {% if user_data.get('Gender') == 1 %}selected{% endif %}>Nam</option>
+                        <option value="0" {% if user_data.get('Gender') == 0 %}selected{% endif %}>Nữ</option>
+                    </select>
 
-        <label for="BloodPressure">Huyết áp:</label>
-        <input type="number" id="BloodPressure" name="BloodPressure" step="1" min="0" required />
+                    <label for="BloodPressure">Huyết áp:</label>
+                    <input type="number" id="BloodPressure" name="BloodPressure" min="0" required value="{{ user_data.get('BloodPressure', '') }}">
 
-        <label for="Cholesterol">Cholesterol:</label>
-        <input type="number" id="Cholesterol" name="Cholesterol" step="1" min="0" required />
+                    <label for="Cholesterol">Cholesterol:</label>
+                    <input type="number" id="Cholesterol" name="Cholesterol" min="0" required value="{{ user_data.get('Cholesterol', '') }}">
 
-        <label for="HeartRate">Nhịp tim:</label>
-        <input type="number" id="HeartRate" name="HeartRate" step="1" min="0" required />
+                    <label for="HeartRate">Nhịp tim:</label>
+                    <input type="number" id="HeartRate" name="HeartRate" min="0" required value="{{ user_data.get('HeartRate', '') }}">
 
-        <label for="QuantumPatternFeature">Đặc trưng Quantum Pattern:</label>
-        <input type="number" id="QuantumPatternFeature" name="QuantumPatternFeature" step="any" required />
+                    <label for="QuantumPatternFeature">Đặc trưng Quantum Pattern:</label>
+                    <input type="number" id="QuantumPatternFeature" name="QuantumPatternFeature" step="any" min="0" required value="{{ user_data.get('QuantumPatternFeature', '') }}">
 
-        <button type="submit">Dự đoán</button>
-    </form>
-
-    {% if prediction %}
-    <div class="result">
-        Kết quả dự đoán: {{ prediction }}
+                    <button type="submit">Dự đoán</button>
+                </form>
+            </div>
+        </div>
+        <div class="result-wrapper {% if prediction %}visible{% endif %}">
+            {% if prediction %}
+            <div class="result">Kết quả dự đoán: {{ prediction }}</div>
+            <table>
+                <thead>
+                    <tr><th>Mức độ</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    {% set levels = {
+                        'Không bệnh': 'Không có dấu hiệu bệnh tim.',
+                        'Nhẹ': 'Mức độ nhẹ, cần theo dõi và điều chỉnh lối sống.',
+                        'Trung bình': 'Mức độ trung bình, cần tư vấn bác sĩ và điều trị.',
+                        'Nặng': 'Mức độ nặng, cần can thiệp y tế ngay lập tức.'
+                    } %}
+                    {% for level, description in levels.items() %}
+                    <tr class="{% if severity_level == level %}highlight{% endif %}"><td>{{ level }}</td><td>{{ description }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <canvas id="predictionChart"></canvas>
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
 
-    {% if error %}
-    <div class="error">
-        Lỗi: {{ error }}
-    </div>
-    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const predProba = {{ pred_proba|tojson|safe }};
+        if (predProba && predProba.length > 0) {
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Không bệnh', 'Nhẹ', 'Trung bình', 'Nặng'],
+                    datasets: [{
+                        label: 'Xác suất dự đoán (%)',
+                        data: predProba.map(p => (p * 100).toFixed(2)),
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
