@@ -133,7 +133,7 @@
             <div class="form-wrapper">
                 <form method="post">
                     <label for="Age">Tuổi:</label>
-                    <input type="number" id="Age" name="Age" min="0" required value="{{ user_data.get('Age', '') }}">
+                    <input type="number" id="Age" name="Age" step="1" min="0" required value="{{ user_data.get('Age', '')|int }}">
 
                     <label for="Gender">Giới tính:</label>
                     <select id="Gender" name="Gender" required>
@@ -143,13 +143,13 @@
                     </select>
 
                     <label for="BloodPressure">Huyết áp:</label>
-                    <input type="number" id="BloodPressure" name="BloodPressure" min="0" required value="{{ user_data.get('BloodPressure', '') }}">
+                    <input type="number" id="BloodPressure" name="BloodPressure" step="1" min="0" required value="{{ user_data.get('BloodPressure', '')|int }}">
 
                     <label for="Cholesterol">Cholesterol:</label>
-                    <input type="number" id="Cholesterol" name="Cholesterol" min="0" required value="{{ user_data.get('Cholesterol', '') }}">
+                    <input type="number" id="Cholesterol" name="Cholesterol" step="1" min="0" required value="{{ user_data.get('Cholesterol', '')|int }}">
 
                     <label for="HeartRate">Nhịp tim:</label>
-                    <input type="number" id="HeartRate" name="HeartRate" min="0" required value="{{ user_data.get('HeartRate', '') }}">
+                    <input type="number" id="HeartRate" name="HeartRate" step="1" min="0" required value="{{ user_data.get('HeartRate', '')|int }}">
 
                     <label for="QuantumPatternFeature">Đặc trưng Quantum Pattern:</label>
                     <input type="number" id="QuantumPatternFeature" name="QuantumPatternFeature" step="any" min="0" required value="{{ user_data.get('QuantumPatternFeature', '') }}">
